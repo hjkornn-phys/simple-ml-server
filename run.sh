@@ -9,4 +9,4 @@ else
   PY="python3"
 fi
 
-exec "$PY" -m uvicorn app.main:app --host "$HOST" --port "$PORT" --reload
+exec "$PY" -m uvicorn ml_server.app.main:app --host "$HOST" --port "$PORT" --reload
