@@ -8,8 +8,11 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 
 from .model_service import ModelService
+from .logging_config import setup_logging
 
 app = FastAPI(title="ML Server", version="0.1.0")
+# Configure logging before obtaining the logger
+setup_logging()
 logger = logging.getLogger("ml_server")
 
 model_service = ModelService()
