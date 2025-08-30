@@ -1,0 +1,11 @@
+[project]
+name = "ml-server"
+version = "0.1.0"
+description = "Simple ML API server using FastAPI, Uvicorn, and LightGBM"
+requires-python = ">=3.13"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "lightgbm",
+  "numpy",
+]
