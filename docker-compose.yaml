@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  ml_server:
+    build:
+      context: .
+      target: runtime
+    image: ml-server:latest
+    container_name: ml_server
+    ports:
+      - "8000:8000"
+    environment:
+      # You can override these as needed
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOG_LEVEL=INFO
+      - MODEL_PATH=/app/models/model.txt
+      # Example: set TRAIN_DATA_PATH to use the mounted directory's CSV file
+      # - TRAIN_DATA_PATH=/app/data/train.csv
+    volumes:
+      # Bind-mount so external programs on the host can write training data (Windows-friendly)
+      - ./training_data_directory:/app/data
+      # Optional: persist models and logs to host
+      - ./models:/app/models
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

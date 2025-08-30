@@ -46,6 +46,66 @@ Environment variables:
 - MODEL_PATH: path to load/save the LightGBM model (default: models/model.txt)
 - HOST, PORT: server bind host/port (defaults: 0.0.0.0 and 8000 in run.sh)
 
+## Containerization (Docker & Compose)
+This repo includes a multi-stage Dockerfile and docker-compose.yaml for a slim, secure image.
+
+- Build the image (first ensure Docker Desktop/Engine is installed and running):
+
+```bash
+docker compose build
+```
+
+- Prepare host directories for bind mounts (so external tools can write training data and you can persist models/logs):
+
+```bash
+mkdir -p training_data_directory models logs
+```
+
+- Start the service:
+
+```bash
+docker compose up -d
+```
+
+- Check logs and health:
+
+```bash
+docker compose logs -f
+curl http://localhost:8000/health
+```
+
+- Stop the service:
+
+```bash
+docker compose down
+```
+
+Volumes (host:container):
+- ./training_data_directory:/app/data
+- ./models:/app/models
+- ./logs:/app/logs
+
+Windows note:
+- With Docker Desktop on Windows, these relative paths bind-mount from your project directory. Ensure the folders exist before starting. External Windows programs can write CSVs into training_data_directory and the app will see them at /app/data.
+
+Environment (container defaults):
+- HOST=0.0.0.0, PORT=8000
+- MODEL_PATH=/app/models/model.txt
+- LOG_LEVEL=INFO (set to DEBUG to increase verbosity)
+- Optionally set TRAIN_DATA_PATH (e.g., /app/data/train.csv) to control the training input path used by the /train endpoint.
+
+Security & runtime details:
+- Runs as a non-root user inside the container.
+- Uses tini as PID 1 for proper signal handling.
+- Git is available inside the image.
+
+## Logging
+The app writes logs to both console and files:
+- logs/app.log: rotates daily at local midnight; keeps 365 backups.
+- logs/error.log: non-rotating; captures ERROR and above from all loggers.
+
+To adjust verbosity, set LOG_LEVEL (e.g., DEBUG, INFO, WARNING).
+
 ## API Usage
 Base URL: http://localhost:8000
 

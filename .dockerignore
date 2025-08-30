@@ -1,0 +1,40 @@
+# Exclude local and build-only artifacts
+
+# VCS
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pytest_cache/
+.mypy_cache/
+.pytype/
+.coverage*
+htmlcov/
+
+# Envs
+.venv/
+.env*
+
+# Data and models (will be bind-mounted via compose)
+logs/
+models/
+training_data_directory/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Other
+*.log
+*.tmp
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+docker-compose*.yaml
